@@ -1,2 +1,2 @@
 # ecomercia
-Side proyect: Framework for develop free functionalities
+Side proyect: Framework for free functionalities development
