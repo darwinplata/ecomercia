@@ -1,0 +1,175 @@
+<noscript>
+  <meta http-equiv="refresh" content="0;url=../login/noscript.html">
+</noscript>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ecomercia | Inicio Sesi&oacute;n</title>
+
+    <!-- Bootstrap -->
+    <link href="../../../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../../../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="../../../vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="../../../vendors/animate.css/animate.min.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="../../../build/css/custom.min.css" rel="stylesheet">
+  </head>
+
+  <body class="login">
+    <div>
+      <a class="hiddenanchor" id="signup"></a>
+      <a class="hiddenanchor" id="signin"></a>
+
+      <div class="login_wrapper">              
+		<div id="register" class="animate form login_form">
+          <section class="login_content">
+            <form id="frmLogin" name="frmLogin" enctype="multipart/form-data" method="post" class="form-horizontal form-label-left" novalidate>
+                <div id="divValidacion" name="divValidacion">
+                </div>	
+                <div id="divValidacionErr" name="divValidacionErr" class="errorHandler alert alert-danger no-display" style="display:none">
+                    <i class="fa fa-times-sign"></i> Existen errores en el diligenciamiento. Favor revisar. 
+                </div>
+                <div id="divValidacionExt" name="divValidacionExt" class="successHandler alert alert-success no-display" style="display:none"> 
+                    <i class="fa fa-ok"></i> Sus datos han sido registrados exitosamente. Está usted siendo redirigido a realizar el pago...
+                </div>	            
+              <h1>Inicio de Sesi&oacute;n</h1>
+			  <div class="item form-group">
+                  <input id="txtUsuario" name="txtUsuario" type="email" required class="form-control" placeholder="Escriba su usuario">
+                  <input id="txtContrasena" type="password" name="txtContrasena" data-validate-length="6,8" class="form-control" required placeholder="Escriba su contrase&ntilde;a">
+              </div>
+              <div>
+              	<button id="send" type="submit" class="btn btn-info" onClick="">Entrar</button>
+                <!--
+                <a class="reset_pass" href="#">Lost your password?</a>
+                //-->
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <!--
+                <p class="change_link">New to site?
+                  <a href="#signup" class="to_register"> Create Account </a>
+                </p>
+                //-->
+
+                <div class="clearfix"></div>
+                <br />
+
+                <div>
+				  <img src='../../images/megalogoAlc.png' height="100">
+                  <h1><br>ecomercia</h1>
+                  <p>©2018 Todos los derechos reservados. <br>
+					<a href="#">T&eacute;rminos y condiciones de uso.</a>
+				  </p>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!-- jQuery -->
+    <script src="../../../vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../../../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="../../../vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="../../../vendors/nprogress/nprogress.js"></script>
+    <!-- validator 
+    <script src="../../../vendors/validator/validator.js"></script>
+    //-->
+	<script src="../../js/jquery-validation/dist/jquery.validate.min.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script src="../../../build/js/custom.min.js"></script>
+    
+    <script>
+				$('#frmLogin').validate({
+					ignore: ".ignore",
+					rules: {
+								txtUsuario: { required: true, minlength: 4, maxlength: 40, email: true},
+								txtContrasena: { required: true, minlength: 2, }
+							},
+					messages: {
+								txtUsuario: "Diligencie su correo electr&oacute;nico registrado en la aplicaci&oacute;n.",
+								txtContrasena : "Debe introducir una contrase&ntilde;a para ingresar a la aplicaci&oacute;n."
+							},
+					invalidHandler: function (event, validator) { //display error alert on form submit
+						var errors = validator.numberOfInvalids();
+						if (errors) {							
+							$("#divValidacionExt").hide();
+							$("#divValidacionErr").show();
+						}
+					},
+					highlight: function (element) {
+						$(element).closest('.help-block').removeClass('valid');
+						// display OK icon
+						$(element).closest('.form-group').removeClass('has-success').addClass('has-error').find('.symbol').removeClass('ok').addClass('required');
+						// add the Bootstrap error class to the control group
+					},
+					unhighlight: function (element) { // revert the change done by hightlight
+						$(element).closest('.form-group').removeClass('has-error');
+						// set error class to the control group
+					},
+					success: function (label, element) {
+						label.addClass('help-block valid');
+						// mark the current input as valid and display OK icon
+						$(element).closest('.form-group').removeClass('has-error').addClass('has-success').find('.symbol').removeClass('required').addClass('ok');
+					},
+					submitHandler: function(form) {
+						$("#divValidacionErr").hide();
+						$("#divValidacionInf").show();
+						var fd = new FormData ($('#frmLogin')[0]);
+						
+						$.ajax({
+							url: 'http://www.creatividata.com/www/ecomercia/ws/usuarios.login.php', 
+							type: 'POST',  
+							data: fd,
+							cache: false,             
+							contentType: false,
+							processData: false, 
+							success: function(data) { 
+									//alert(data);
+									var seg = JSON.parse(data);
+									
+									sessionStorage.setItem("ssnNombre", seg.usuario.nombre);
+									sessionStorage.setItem("ssnApellido", seg.usuario.apellido);
+									sessionStorage.setItem("ssnAvatar", seg.usuario.avatar);
+									sessionStorage.setItem("ssnColor", seg.usuario.color);
+									sessionStorage.setItem("ssnCargo", seg.usuario.cargo);
+									sessionStorage.setItem("ssnNmbEmpresa", seg.usuario.nombre_emp);
+									sessionStorage.setItem("ssnSglEmpresa", seg.usuario.sigla_emp);
+									sessionStorage.setItem("ssnLogEmpresa", seg.usuario.logo_emp);
+									sessionStorage.setItem("ssnURLContexto", seg.propiedades.contexto);
+									sessionStorage.setItem("ssnURLEndpoint", seg.usuario.endpoint);
+									sessionStorage.setItem("ssnSeguridad", data);
+									
+									var roles='';
+									for (i = 0; i < Object.keys(seg.usuario.roles).length; i++) {
+										roles+=seg.usuario.roles[i].descripcion+', ';
+									} 
+									sessionStorage.setItem("ssnRoles",roles);
+
+									window.open('http://www.creatividata.com/www/ecomercia/app/web/mapa/inicio/', '_self'); 
+							},
+							error: function(jqXHR, textStatus, errorThrown) {
+								alert("Error detectado: " + textStatus + "\nExcepcion: " + errorThrown);
+							}
+						});
+						return false;
+					}
+				});	
+    </script>
+  </body>
+</html>

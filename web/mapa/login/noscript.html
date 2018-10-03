@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Alcald&iacute;a de Barranquilla | </title>
+
+    <!-- Bootstrap -->
+    <link href="../../../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../../../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="../../../vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="../../../vendors/animate.css/animate.min.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="../../../build/css/custom.min.css" rel="stylesheet">
+  </head>
+
+  <body class="login">
+    <div>
+      <a class="hiddenanchor" id="signup"></a>
+      <a class="hiddenanchor" id="signin"></a>
+
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content">
+			  <div id="divValidacionExt" name="divValidacionExt" class="successHandler alert alert-success no-display"> 
+				<i class="fa fa-ok"></i> Su navegador no tiene activo el uso de scripts, lo cual es necesario para utilizar la aplicaci&oacute;n. Por favor realice los ajustes y vuelva a intentarlo.
+              </div>
+			  <div>
+				<a target='blank' href='https://www.google.com.co/search?q=como+habilitar+javascript&gbv=1&sei=U_x6WpDiHomuzwLOzaSQBw'>&iquest;C&oacute;mo habilitarlo?</a><br><br>
+			  </div>
+              <div class="clearfix"></div>
+			  <div>
+				Habilite su navegador y recargue la p&aacute;gina. Solo podr&aacute; ingresar hasta que se habiliten los scripts en su navegador. <br><br>
+              </div>
+              <div>
+				<button id="send" type="submit" class="btn btn-success" onclick="window.open('../login/index.html','_self');">Ir al Login</button>
+              </div>
+              <div class="clearfix"></div>
+              <div class="separator">
+                <div class="clearfix"></div>
+                <br />
+                <div>
+				  <img src='../../images/megalogoAlc.png'>
+                  <h1>Alcald&iacute;a de Barranquilla </h1>
+                  <p>©2018 Todos los derechos reservados. T&eacute;rminos y condiciones de uso.</p>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!-- jQuery -->
+    <script src="../../../vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../../../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="../../../vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="../../../vendors/nprogress/nprogress.js"></script>
+    <!-- validator 
+    <script src="../../../vendors/validator/validator.js"></script>
+    //-->
+	<script src="../../js/jquery-validation/dist/jquery.validate.min.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script src="../../../build/js/custom.min.js"></script>
+    
+    <script>
+				$('#frmLogin').validate({
+					ignore: ".ignore",
+					rules: {
+								txtUsuario: { required: true, minlength: 4, maxlength: 40, email: true},
+								txtContrasena: { required: true, minlength: 2, }
+							},
+					messages: {
+								txtUsuario: "Diligencie su correo electr&oacute;nico registrado en la aplicaci&oacute;n.",
+								txtContrasena : "Debe introducir una contrase&ntilde;a para ingresar a la aplicaci&oacute;n."
+							},
+					invalidHandler: function (event, validator) { //display error alert on form submit
+						var errors = validator.numberOfInvalids();
+						if (errors) {							
+							$("#divValidacionExt").hide();
+							$("#divValidacionErr").show();
+						}
+					},
+					highlight: function (element) {
+						$(element).closest('.help-block').removeClass('valid');
+						// display OK icon
+						$(element).closest('.form-group').removeClass('has-success').addClass('has-error').find('.symbol').removeClass('ok').addClass('required');
+						// add the Bootstrap error class to the control group
+					},
+					unhighlight: function (element) { // revert the change done by hightlight
+						$(element).closest('.form-group').removeClass('has-error');
+						// set error class to the control group
+					},
+					success: function (label, element) {
+						label.addClass('help-block valid');
+						// mark the current input as valid and display OK icon
+						$(element).closest('.form-group').removeClass('has-error').addClass('has-success').find('.symbol').removeClass('required').addClass('ok');
+					},
+					submitHandler: function(form) {
+						$("#divValidacionErr").hide();
+						$("#divValidacionInf").show();
+						var fd = new FormData ($('#frmLogin')[0]);
+						
+						$.ajax({
+							url: '../ajax/usuarios.login.php', 
+							type: 'POST',  
+							data: fd,
+							cache: false,             
+							contentType: false,
+							processData: false, 
+							success: function(data) { 
+									var seg = JSON.parse(data);
+									
+									sessionStorage.setItem("ssnNombre", seg.usuario.nombre);
+									sessionStorage.setItem("ssnApellido", seg.usuario.apellido);
+									sessionStorage.setItem("ssnMenu", data);
+									window.open('../inicio/','_self'); 
+							},
+							error: function(jqXHR, textStatus, errorThrown) {
+								alert("Error detectado: " + textStatus + "\nExcepcion: " + errorThrown);
+							}
+						});
+						return false;
+					}
+				});	
+    </script>
+  </body>
+</html>
